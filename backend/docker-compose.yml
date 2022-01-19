@@ -1,0 +1,22 @@
+version: '3.8'
+
+services: 
+    mssql-server:
+        image: mcr.microsoft.com/mssql/server:2019-CU8-ubuntu-16.04
+        environment: 
+            ACCEPT_EULA: "Y"
+            SA_PASSWORD: "Str@ngPassword2021!"
+            MSSQL_PID: "Express"
+        ports: 
+            - "11433:1433"
+
+    games-drop-api:
+        build: 
+            context: .
+            dockerfile: GamesDrop/Dockerfile
+        ports: 
+            - "8080:80"
+        depends_on:
+            - mssql-server
+        environment: 
+            ConnectionStrings:DefaultConnection: "Server= mssql-server; Database=GamesDrop; User=SA; Password=Str@ngPassword2021!"
